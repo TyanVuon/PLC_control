@@ -1,0 +1,4 @@
+Setup
+1.Create COM1 <-> COM2 pair using HHD Virtual Serial Port Tools
+2.Adjust Camera/Serial address from UBUNTU to Windows
+3.Make Serial_Controller.py listening to COM2 
