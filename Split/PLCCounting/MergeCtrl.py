@@ -100,7 +100,7 @@ class CameraController:
     def capture_image(self, save_path):
         ret, frame = self.camera.read()
         if ret:
-            cv2.imwrite(save_path, frame)
+            cv2.imwrite(save_path, frame, [cv2.IMWRITE_PNG_COMPRESSION, 9])
             return True
         print("[ERROR] Failed to capture image.")
         return False
@@ -114,68 +114,61 @@ class CameraController:
 # =========================
 
 class CommandHandler:
-    def __init__(self, serial_controller, camera_controller):
+    def __init__(self, serial_controller, camera_controller, product_id=None, username=None):
         self.serial = serial_controller
         self.camera = camera_controller
         self.image_count = 1
-        self.output_dir = None
-        self.serial_number = input("Please type in the serial number: ").strip()
-        self.initialize_output_directory()
-        self.current_layer = None #track layer changes
+        self.current_layer = None  # Track layer changes
 
+        # Allow parameter-based or manual input
+        self.product_id = product_id if product_id else input("Enter Product ID (12 characters): ").strip()
+        self.username = username if username else input("Enter Username: ").strip()
+
+        # Ensure both product_id and username are valid
+        if not self.product_id or not self.username:
+            raise ValueError("Both Product ID and Username must be provided.")
+
+        # Set the output directory after initializing product_id and username
+        self.output_dir = os.path.join(os.getcwd(), f"{self.product_id}_{self.username}")
+        self.initialize_output_directory()
 
     def initialize_output_directory(self):
-        """Create a directory based on the serial number."""
-        self.output_dir = os.path.join(os.getcwd(), self.serial_number)
+        """Create the output directory."""
+        if not self.output_dir:
+            raise ValueError("Output directory is not set.")
         os.makedirs(self.output_dir, exist_ok=True)
-        #print(f"[INFO] Output directory created: {self.output_dir}")
+        print(f"[INFO] Output directory created: {self.output_dir}")
 
     def handle_ready(self):
-        
         """Send READY signal (300) to PLC and initialize the output directory."""
         if not self.serial.serial_port or not self.serial.serial_port.is_open:
             raise Exception("[ERROR] Serial port is not open. Cannot send READY signal.")
           
-        #print("[INFO] Sending READY signal (300) to PLC.")
         self.serial.write_data(300)  # Send 300 to PLC
         time.sleep(0.1)
-        #to stablize first image
         self.camera.flush_camera_buffer(num_frames=8)
-        self.initialize_output_directory()
 
-
-    # Initialize progress bars
+        # Initialize progress bars
         self.total_images = 334  # Adjust based on total images to capture
         self.total_bar = tqdm(total=self.total_images, desc="Total Progress", unit="image", position=0, leave=True)
 
-            
-
     def handle_capture(self, layer, section):
-       
-       # Detect new layer transition
+        """Capture and save an image with a specific naming format."""
+        # Detect new layer transition
         if layer != self.current_layer:
-            #print(f"[INFO] Transitioning to new layer: {layer}. Flushing camera buffer.")
             self.camera.flush_camera_buffer(num_frames=7)  # Clear stale frames at layer start
             self.current_layer = layer  # Update current layer
 
-        """Capture and save an image with a specific naming format."""
-        file_name = f"{self.serial_number}-layer{layer + 1:02d}-section{section:02d}.jpg"
+        file_name = f"{self.product_id}-layer{layer + 1:02d}-section{section:02d}.png"
         save_path = os.path.join(self.output_dir, file_name)
 
-        
         self.camera.flush_camera_buffer(num_frames=3)
 
         if self.camera.capture_image(save_path):
-            #print(f"[INFO] Captured image saved to: {save_path}")
             self.serial.write_data(500)  # DONE signal for normal capture completion
-
-            # Update Progress 
-            self.total_bar.update(1)
-            
-
+            self.total_bar.update(1)  # Update progress bar
         else:
             self.serial.write_data(600)  # Treat as a failed capture
-
 
     def process_incoming_command(self, command, layer, section):
         """Process incoming commands and capture images based on them."""
