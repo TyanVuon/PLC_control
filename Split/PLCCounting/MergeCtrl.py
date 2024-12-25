@@ -47,7 +47,7 @@ class SerialController:
     def write_data(self, data):
         try:
             self.serial_port.write(data.to_bytes(2, byteorder='little'))
-            print(f"[DEBUG] Sent data: {data}")  # Debugging statement
+            #print(f"[DEBUG] Sent data: {data}")  # Debugging statement
         except Exception as e:
             print(f"[ERROR] Failed to send data: {e}")
 
@@ -185,11 +185,11 @@ class CommandHandler:
         self.layer_bar = tqdm(total=self.layers[self.current_layer_index], 
                                 desc=f"Layer {self.current_layer_index + 1} Progress", 
                                 unit="image", position=1, leave=True)
-        print(f"[DEBUG] Initialized progress bar for Layer {self.current_layer_index + 1}.")  # Debugging statement
+        #print(f"[DEBUG] Initialized progress bar for Layer {self.current_layer_index + 1}.")  # Debugging statement
 
     def initialize_folders(self):
         """Create directory structure for the session."""
-        print("[DEBUG] Initializing folders.")  # Debugging statement
+        #print("[DEBUG] Initializing folders.")  # Debugging statement
         self.output_dir = self._create_batch_directory()
         self._create_layer_folders()
 
@@ -222,7 +222,7 @@ class CommandHandler:
 
         # Comment out for testing
         time.sleep(0.1)  # Simulate delay for stability
-        self.camera.flush_camera_buffer(num_frames=3)
+        #self.camera.flush_camera_buffer(num_frames=3)
 
         if self.camera.capture_image(image_path):
             self.image_count += 1
@@ -235,7 +235,7 @@ class CommandHandler:
             # Check if the current section is complete
             if self.current_section_count >= self.layers[layer]:  # Check against fixed total
                 #tqdm.write(f"[INFO] Layer {layer + 1} complete.")
-                print(f"[INFO] Layer {layer + 1} complete.")  # Debugging statement
+                #print(f"[INFO] Layer {layer + 1} complete.")  # Debugging statement
                 self.layer_bar.close()
                 self.serial.write_data(500)  # DONE signal for completed layer
             else:
@@ -268,7 +268,7 @@ class CommandHandler:
                 self.current_iai_index = layer
 
                 # UNCOMMENT after testing
-                self.camera.flush_camera_buffer(num_frames=5)  # Ensure the camera is ready for the new layer
+                #self.camera.flush_camera_buffer(num_frames=5)  # Ensure the camera is ready for the new layer
 
                 # Ensure folder for the new layer exists
                 while len(self.layer_folders) < layer:
