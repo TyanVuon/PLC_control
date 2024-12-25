@@ -222,7 +222,7 @@ class CommandHandler:
 
         # Comment out for testing
         time.sleep(0.1)  # Simulate delay for stability
-        #self.camera.flush_camera_buffer(num_frames=3)
+        self.camera.flush_camera_buffer(num_frames=3)
 
         if self.camera.capture_image(image_path):
             self.image_count += 1
@@ -268,7 +268,7 @@ class CommandHandler:
                 self.current_iai_index = layer
 
                 # UNCOMMENT after testing
-                #self.camera.flush_camera_buffer(num_frames=5)  # Ensure the camera is ready for the new layer
+                self.camera.flush_camera_buffer(num_frames=5)  # Ensure the camera is ready for the new layer
 
                 # Ensure folder for the new layer exists
                 while len(self.layer_folders) < layer:
