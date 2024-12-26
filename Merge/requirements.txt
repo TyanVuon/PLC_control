@@ -1,0 +1,4 @@
+numpy
+opencv-python==4.10.0.84
+pyserial==3.5
+tqdm==4.67.1
