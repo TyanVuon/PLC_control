@@ -18,7 +18,7 @@ colorama
 configobj
 constantly
 cryptography
-curl
+curla
 dbus
 debconf
 distro
