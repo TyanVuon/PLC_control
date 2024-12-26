@@ -1,0 +1,21 @@
+# Ignore all virtual environments and dependencies
+venv/
+ctrl/  # Your virtual environment folder
+!ctrl/requirements.txt  # Except for requirements.txt
+
+# Ignore Python bytecode and cache files
+**/__pycache__/
+**/*.pyc
+**/*.pyo
+
+# Ignore site-packages and compiled libraries
+**/site-packages/
+**/*.so
+**/*.dll
+**/*.dylib
+
+# Ignore dataset and temporary files
+*.csv
+*.xml
+*.log
+*.tmp
