@@ -10,7 +10,7 @@ from tqdm import tqdm
 # =========================
 
 class SerialController:
-    def __init__(self, port_name='/dev/ttyUSB0', baudrate=9600, parity=serial.PARITY_ODD,
+    def __init__(self, port_name='/dev/pts/24', baudrate=9600, parity=serial.PARITY_NONE,
                  stopbits=serial.STOPBITS_ONE, bytesize=serial.EIGHTBITS, timeout=1,
                  rtscts=False, xonxoff=False):
         # print("Initializing SerialController...")  # Debugging statement
@@ -72,8 +72,8 @@ class SerialController:
 # =========================
 
 class CameraController:
-    #def __init__(self, device_path='/dev/video0'): for UBUNTU
-    def __init__(self, device_path=0):
+    def __init__(self, device_path='/dev/video0'):
+    ##############"def __init__(self, device_path=0):"
         # print("Initializing CameraController...")
         self.device_index = device_path
         self.camera = cv2.VideoCapture(self.device_index)
@@ -195,8 +195,8 @@ def main():
     handler = None
     try:
 
-        #serial_comm = SerialController(port_name='/dev/ttyUSB0') for UBUNTU
-        serial_comm = SerialController(port_name='COM2')
+        serial_comm = SerialController(port_name='/dev/pts/24') 
+        #serial_comm = SerialController(port_name='COM2')
         camera = CameraController()
         handler = CommandHandler(serial_comm, camera)
 

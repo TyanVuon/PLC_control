@@ -2,8 +2,8 @@ import serial
 import struct
 import time
 
-# Open the COM port for sending data
-ser = serial.Serial('COM1', baudrate=9600, parity=serial.PARITY_ODD,
+# Open the serial port for sending data (use the appropriate Linux device file)
+ser = serial.Serial('/dev/pts/5', baudrate=9600, parity=serial.PARITY_NONE,
                     stopbits=serial.STOPBITS_ONE, bytesize=serial.EIGHTBITS, timeout=1)
 
 # Define the layers and sections
