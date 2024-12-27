@@ -9,12 +9,12 @@
   - `Dec 25, 12:00`
 
 ## Activate Virtual Environment `ctrl`
-```~/repository/Ctrl-dev$ source ctrl/bin/activate
+```source ctrl/bin/activate
 ```
 
 ## Run Container
 ```bash
-(ctrl) createch@aidevice:~/repository/Ctrl-dev/Split/PLCCounting$ sudo docker run -it ctrl /bin/bash
+sudo docker run -it ctrl /bin/bash
 ```
 
 ## Virtual PLC Setup

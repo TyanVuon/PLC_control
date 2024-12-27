@@ -13,7 +13,7 @@
 To activate the virtual environment, run the following command:
 
 ```bash
-~/repository/Ctrl-dev/ source ctrl/bin/activate
+source ctrl/bin/activate
 ```
 
 ---
@@ -22,7 +22,7 @@ To activate the virtual environment, run the following command:
 To run the container, execute:
 
 ```bash
-~/repository/Ctrl-dev/ sudo docker run -it ctrl_image /bin/bash
+sudo docker run -it ctrl_image /bin/bash
 ```
 
 ---
